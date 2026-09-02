@@ -1,0 +1,14 @@
+{
+  "name": "software-design-agent-skill",
+  "version": "1.0.0",
+  "description": "Agent skill: a practitioner's checklist distilled from John Ousterhout's A Philosophy of Software Design, for code review and design discussions.",
+  "license": "MIT",
+  "author": "lukeramsden",
+  "repository": { "type": "git", "url": "git+https://github.com/lukeramsden/software-design-agent-skill.git" },
+  "homepage": "https://github.com/lukeramsden/software-design-agent-skill#readme",
+  "bugs": "https://github.com/lukeramsden/software-design-agent-skill/issues",
+  "keywords": [ "pi-package", "pi-skill", "pi-coding-agent", "agent-skill", "software-design" ],
+  "pi": { "skills": [ "./skills" ] },
+  "files": [ "skills", "README.md", "LICENSE", "NOTICE" ],
+  "scripts": { "verify": "test -f skills/software-design/SKILL.md" }
+}

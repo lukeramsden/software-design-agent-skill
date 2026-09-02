@@ -47,3 +47,18 @@ This is an independent practitioner's distillation inspired by John Ousterhout's
 ## License
 
 The original material in this repository is available under the MIT License. The names and ideas attributed to John Ousterhout remain the work of their respective author and rights holders. See [NOTICE](NOTICE).
+
+## Install as a pi package
+
+```bash
+pi install npm:software-design-agent-skill
+```
+
+## Releasing
+
+```bash
+npm version patch|minor|major && git push --follow-tags
+```
+
+The `v*` tag triggers `.github/workflows/publish.yml`, which publishes to npm
+with OIDC trusted publishing and provenance.

@@ -1,0 +1,29 @@
+name: Publish Package
+
+# Triggered by version tags (npm version ... && git push --follow-tags).
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  id-token: write # Required for OIDC trusted publishing
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
+          package-manager-cache: false # never use caching in release builds
+      # Trusted publishing requires npm CLI >= 11.5.1
+      - run: npm install -g npm@latest
+      - run: npm run verify
+      # OIDC trusted publishing authenticates automatically; provenance
+      # attestation is generated because repo and package are both public.
+      - run: npm publish --provenance --access public
