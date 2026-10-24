@@ -1,6 +1,6 @@
 ---
 name: software-design
-description: Review software design and plan refactors. Use when assessing module boundaries, API complexity, coupling, shared assumptions, or changes that require coordinated edits.
+description: Use when reviewing code, designing APIs or modules, or planning refactors. Diagnose complexity, weak abstractions, coupling, unclear names, comments, and error handling.
 ---
 
 > "This book is about one thing: complexity."  — Ousterhout
