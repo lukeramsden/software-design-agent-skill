@@ -31,13 +31,20 @@ npx skills add lukeramsden/software-design-agent-skill --list
 - Diagnostic vocabulary for complexity and obscurity
 - Guidance on deep modules, information hiding, layering, errors, comments, naming, consistency, and performance
 - A practical code-review checklist
+- Connascence diagnostics for shared assumptions and coordinated changes
+- A [practical coupling guide](skills/software-design/connascence-guide.md) and [connascence.io source archive](skills/software-design/connascence/index.md)
 
 ## Repository layout
 
 ```text
 skills/
 └── software-design/
-    └── SKILL.md
+    ├── SKILL.md
+    ├── connascence-guide.md
+    └── connascence/       # Source pages and index (CC BY-SA 3.0)
+
+tests/
+└── connascence-review-cases.md
 ```
 
 ## Attribution
@@ -46,7 +53,7 @@ This is an independent practitioner's distillation inspired by John Ousterhout's
 
 ## License
 
-The original material in this repository is available under the MIT License. The names and ideas attributed to John Ousterhout remain the work of their respective author and rights holders. See [NOTICE](NOTICE).
+The original material in this repository is available under the MIT License. The archived content in `skills/software-design/connascence/` is from [connascence.io](https://connascence.io/) and remains under [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/), not MIT. The names and ideas attributed to John Ousterhout remain the work of their respective author and rights holders. See [NOTICE](NOTICE).
 
 ## Install as a pi package
 
