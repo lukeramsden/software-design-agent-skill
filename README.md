@@ -43,8 +43,6 @@ skills/
     ├── connascence-guide.md
     └── connascence/       # Source pages and index (CC BY-SA 3.0)
 
-tests/
-└── connascence-review-cases.md
 ```
 
 ## Attribution
