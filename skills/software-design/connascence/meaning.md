@@ -1,0 +1,85 @@
+## [Connascence of Meaning](meaning.md "Permalink to Connascence of Meaning")
+
+Connascence of meaning is when multiple components must agree on the meaning of particular values. Consider some code that processes credit card payments. The following function might be used to determine if a given credit card number is valid or not:
+
+```
+def is_credit_card_number_valid(card_number):
+    # Check for 'test' credit card numbers:
+    if card_number == "9999-9999-9999-9999":
+        return True
+    # Do normal validation:
+    # ...
+```
+
+The problem here is that all parts of this system must agree that 9999-9999-9999-9999 is the test credit card number. If that value changes in one place, it must also change in another.
+
+Here's another example where user roles are encoded as integers:
+
+```
+def get_user_role(username):
+    user = database.get_user_object_for_username(username)
+    if user.is_admin:
+        return 2
+    elif user.is_manager:
+        return 1
+    else:
+        return 0
+```
+
+Elsewhere, code might need to check that a given username is an administrator, like so:
+
+```
+if get_user_role(username) != 2:
+    raise PermissionDenied("You must be an administrator")
+```
+
+Connascence of meaning can be improved to connascence of name by moving the "magic values" to named constants, and referring to the constants instead of the values. However in doing so, we have increased the amount of connascence of name (since we now need a third location to store the constant).
+
+Another common example of connascence of meaning is when None is used as a return value. This frequently occurs in functions that are tasked with finding an object. If that object isn't found, the function might return None.
+
+```
+def find_user_in_database(username):
+    return database.find_user(username=username) or None
+```
+
+However, the function might also return None in an error condition:
+
+```
+def find_user_in_database(username):
+    try:
+        return database.find_user(username=username) or None
+    except DatabaseError:
+        return None
+```
+
+The problem in both these cases is that a semantic meaning is being assigned to the None value. If multiple different meanings are assigned to the same None value in the same codebase, the programmer must remember which meaning applies to which case. This can be improved to connascence of name by returning an explicit object that represents the case in question:
+
+```
+def find_user_in_database(username):
+    try:
+        return database.find_user(username=username) or ObjectNotFound
+    except DatabaseError:
+        return None
+```
+
+We still have connascence of meaning in the error case, but at least the None value is no longer ambigous. The error case could also be improved to connascence of name in a similar way.
+
+Another common example of connascence of meaning is when we use primitive numeric types to represent more complex values. Consider this line of code in a codebase that processes payments:
+
+```
+unit_cost = 49.95
+```
+
+What currency is that cost expressed in? US dollars? British pounds? How do you ensure that two costs with different currencies are not added together? Similar to the examples above, the problem is that a semantic meaning is being added to the primitive type. It can be improved to connascence of type by creating a 'Cost' type that disallows operations between different currencies:
+
+```
+unit_cost = Cost(49.95, 'USD')
+```
+
+This particular problem is often called "**Primitive Obsession**", and can be generically described as using primitive data types to represent more complex domains.
+
+---
+
+Source: https://connascence.io/meaning.html
+
+Original content from connascence.io, licensed under [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/). Converted from HTML to Markdown; site navigation and footer omitted.

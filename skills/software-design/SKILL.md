@@ -1,6 +1,6 @@
 ---
 name: software-design
-description: A practitioner's distillation of John Ousterhout's *A Philosophy of Software Design* (2018) for use during code review, design discussions, and writing. Use it as a checklist of named diagnostics, not as a chapter summary.
+description: Use when reviewing code, designing APIs or modules, or planning refactors. Diagnose complexity, weak abstractions, coupling, unclear names, comments, and error handling.
 ---
 
 > "This book is about one thing: complexity."  — Ousterhout
@@ -73,6 +73,33 @@ The mapping: dependencies → change amplification + cognitive load; obscurity �
 
 ---
 
+## 4a. Diagnosing coupling with connascence
+
+Use this procedure when changes require coordinated edits or code relies on a hidden agreement. Ousterhout explains the complexity; connascence identifies what participants must agree on. It complements the principles above rather than replacing them.
+
+1. **Name the agreement and participants.** State what must stay consistent and identify concrete declarations, callers, components, or services. Do not report a label without evidence.
+2. **Classify the agreement.** More than one form may apply; use the table below.
+3. **Assess strength, locality, and degree together.** Strength is difficulty of discovery/refactoring; locality is how close participants are; degree is how many are affected. Prioritise strong agreements crossing boundaries or involving many participants. Do not invent numerical scores or a rigid ranking.
+4. **Compare repairs.** Eliminate the agreement, contain it within one module, or replace it with a weaker, explicit agreement. Strong coupling inside a cohesive implementation can be acceptable; do not split it just to reduce a label count.
+5. **Check total complexity.** Reject repairs whose extra interfaces, configuration, or indirection cost more than the dependency they remove. Name and type coupling are normal; zero coupling is not the goal.
+6. **Verify behaviour and invariants.** Test public requirements independently of the implementation. Do not weaken a valid test merely because it must change when the contract changes.
+
+| Agreement on… | Form and reference |
+|---|---|
+| Entity names | [Name](connascence/name.md) |
+| Types | [Type](connascence/type.md) |
+| Interpretation of values, units, or sentinels | [Meaning](connascence/meaning.md) |
+| Ordering of data or arguments | [Position](connascence/position.md) |
+| A calculation or transformation | [Algorithm](connascence/algorithm.md) |
+| Order of operations | [Execution](connascence/execution.md) |
+| Runtime timing | [Timing](connascence/timing.md) |
+| Values that must change together | [Value](connascence/value.md) |
+| The same entity, not merely equal data | [Identity](connascence/identity.md) |
+
+For repairs, trade-offs, and test-oracle guidance, read [the practical guide](connascence-guide.md). Load only relevant [source pages](connascence/index.md), not the whole archive. The workflow is this skill's synthesis; source material is attributed separately and is not part of Ousterhout's canonical lists.
+
+---
+
 ## 5. Modules
 
 ### Deep > shallow
@@ -90,6 +117,8 @@ A module's *benefit* is functionality; its *cost* is interface size. The best mo
 When you spot the same knowledge in two places, ask: *"How can I reorganise these so this knowledge only affects one module?"* Two repairs:
 1. **Merge** the modules.
 2. **Extract** the knowledge into a new module — but only if that module can have a *simple* interface. Otherwise you've just moved the leak.
+
+Before merging or extracting, state the shared agreement using §4a: names, meanings, positions, algorithms, or runtime requirements. Shared knowledge is not limited to duplicated code. Choose the boundary that contains the knowledge without adding a shallow interface.
 
 Watch for **back-door leakage**: knowledge shared between modules without appearing in any interface. More dangerous than interface leakage because it's invisible.
 
@@ -163,6 +192,8 @@ Document *what the variable represents*, not the sites that mutate it. Anti-patt
 - For a class: what abstraction does it provide? what does each instance represent? what are the limitations?
 - For a method: behavior as perceived by callers + each arg/return + side effects + exceptions + preconditions.
 
+Document unavoidable sequencing, timing, and shared-identity requirements in interface contracts: required order, completion conditions, and ownership. Documentation makes the agreement visible; it does not remove the coupling. First check whether the API can enforce or contain it.
+
 ### Write the comments first
 Class interface comment → method signatures + interface comments → iterate → instance variables → method bodies. **When the code is done, the comments are done.** The comment-driven workflow surfaces design problems before they're committed to code.
 
@@ -187,6 +218,8 @@ The Sprite OS bug: a variable `block` was used both for physical disk-block numb
 ### Two qualities
 - **Precise** — a reader who sees the name in isolation should be able to guess what it refers to. `count` of what? Better: `numIndexlets`. `blinkStatus`? Better: `cursorVisible` (and boolean names should be predicates).
 - **Consistent** — pick a name for each kind-of-thing, use it everywhere for that purpose, *and never reuse it for any other purpose*. Consistency is cognitive leverage: readers can predict behavior without analysing it.
+
+Replacing implicit meanings with named constants or domain types can weaken connascence, not eliminate it. Callers still depend on those names and types; introduce them when explicit meaning earns the added interface.
 
 ### Length scales with distance
 **The greater the distance between a name's declaration and its uses, the longer the name should be.** `i` in a 5-line loop is fine; in a 100-line method it isn't. Loop conventions: `i` outermost, `j` next-nested.
@@ -300,7 +333,7 @@ A scannable order of operations.
 
 1. **Is it obvious to a first-time reader?** If the reviewer is confused, fix the code, not the reviewer.
 2. **Are interfaces deep?** Check the interface comment alone — does it carry enough to use the module without reading the body? Or does it leak implementation?
-3. **Is the same knowledge encoded in two places?** Information leakage is the most expensive bug to leave in.
+3. **What must change together?** Identify shared meanings, positions, algorithms, and runtime assumptions—not just duplicated code. Assess strength, locality, and degree (§4a). Can the agreement be eliminated, contained, or made explicit without adding a shallow abstraction? Preserve public contracts and their independent tests.
 4. **Pass-through methods? Pass-through variables? Shallow decorators?** Same-abstraction adjacent layers need to merge or split.
 5. **Is anything special-cased that could be normalised?** Is there an `if (no-X)` branch where the design could just always have an empty-X?
 6. **Are exceptions earning their keep?** Could the operation be redefined so the exception isn't an error? Could the exception be masked or aggregated?

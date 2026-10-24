@@ -6,3 +6,11 @@ John Ousterhout, A Philosophy of Software Design, Yaknyam Press, 2018.
 The book title, attributed terminology, quotations, concepts, and examples are
 identified for commentary and educational use. This project is not affiliated
 with or endorsed by John Ousterhout or Yaknyam Press.
+
+The skills/software-design/connascence/ directory contains content from
+https://connascence.io/, converted from HTML to Markdown. That archive is licensed
+under the Creative Commons Attribution-ShareAlike 3.0 Unported License:
+https://creativecommons.org/licenses/by-sa/3.0/
+It is not covered by this repository's MIT licence. Each page retains its source
+URL; the archive index records the conversion changes and attribution.
+The surrounding diagnostic workflow and practical guide are independent synthesis.
