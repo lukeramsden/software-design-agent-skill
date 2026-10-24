@@ -1,6 +1,6 @@
 ---
 name: software-design
-description: A practitioner's distillation of John Ousterhout's *A Philosophy of Software Design* (2018) for use during code review, design discussions, and writing. Includes connascence diagnostics for coupling and coordinated changes. Use it as a checklist of named diagnostics, not as a chapter summary.
+description: Review software design and plan refactors. Use when assessing module boundaries, API complexity, coupling, shared assumptions, or changes that require coordinated edits.
 ---
 
 > "This book is about one thing: complexity."  — Ousterhout
